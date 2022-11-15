@@ -49,7 +49,7 @@ FOR EACH ROW
     BEGIN
         DECLARE saldo_change INT;
         DECLARE bunga INT;
-        IF setoran THEN 
+        IF NEW.setoran THEN 
             SET bunga = 0.05 * NEW.nilai_transaksi;
             SET saldo_change = NEW.nilai_transaksi;
         ELSE
