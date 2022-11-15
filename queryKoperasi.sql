@@ -29,7 +29,7 @@ FOR EACH ROW
         END IF;
         SET NEW.bunga = bunga;
         UPDATE anggota
-        SET saldo = saldo + saldo_change
+        SET saldo = saldo + saldo_change + bunga
         WHERE id_anggota = NEW.id_anggota;
     END $$
 
@@ -43,13 +43,31 @@ BEGIN
 END $$
 DELIMITER ;
 
--- INSERT INTO transaksi(id_transaksi, id_anggota, tanggal_transaksi, setoran, nilai_transaksi, bunga)
--- VALUES(default, 'AK001', NOW(), true, 200000, default);
-
--- INSERT INTO transaksi(id_transaksi, id_anggota, tanggal_transaksi, setoran, nilai_transaksi, bunga)
--- VALUES(default, 'AK001', NOW(), false, 200000, default);
-
-
-SELECT * FROM log_anggota;
 SELECT * FROM anggota;
+INSERT INTO transaksi(id_anggota, tanggal_transaksi, setoran, nilai_transaksi, bunga)
+VALUES 
+('AK001', '2011-02-10',1, 100000,default),
+('AK002','2011-02-10', 1, 200000,default),
+('AK003','2011-02-11',1,300000,default),
+('AK004','2011-02-11',0,50000,default),
+('AK005','2011-02-11',1,100000,default),
+('AK006','2011-02-12',1,200000,default),
+('AK007','2011-02-12',1,300000,default),
+('AK008','2011-02-12',1,100000,default),
+('AK009','2011-02-14',1,100000,default),
+('AK010','2011-02-14',1,300000,default),
+('AK011','2011-02-15',1,200000,default),
+('AK012','2011-02-16',0,50000,default),
+('AK013','2011-02-16',1,300000,default),
+('AK014','2011-02-17',1,200000,default),
+('AK015','2011-02-17',1,100000,default),
+('AK016','2011-02-17',1,100000,default),
+('AK017','2011-02-18',1,300000,default),
+('AK018','2011-02-18',1,100000,default),
+('AK019','2011-02-19',1,200000,default),
+('AK020','2011-02-19',0,50000,default),
+('AK011','2011-02-19',0,100000,default);
+
+SELECT * FROM anggota;
+SELECT * FROM log_anggota;
 SELECT * FROM transaksi;

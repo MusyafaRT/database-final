@@ -40,8 +40,6 @@ VALUES
     ('AK018', 'Damayanti', 'Jl. Singaraja 35 Bandung', '022-2112345', 100000),
     ('AK019', 'Nur', 'Jl. Airlangga 78 Bandung', '022-2988988', 100000),
     ('AK020', 'Hasna', 'Jl. Kertajaya 10 Bandung', '022-2530965', 100000);
-
-SELECT * FROM anggota;
 CREATE TABLE IF NOT EXISTS log_anggota(
     id_log INT PRIMARY KEY AUTO_INCREMENT,
     id_transaksi INT,
@@ -51,76 +49,6 @@ CREATE TABLE IF NOT EXISTS log_anggota(
     action VARCHAR(10) NOT NULL,
     change_date DATETIME NOT NULL
 );
-
-DELIMITER $$
-CREATE TRIGGER IF NOT EXISTS after_anggota_update
-AFTER UPDATE ON anggota
-FOR EACH ROW 
-    BEGIN
-        INSERT INTO log_anggota
-        SET id_transaksi = (SELECT id_transaksi FROM transaksi WHERE id_transaksi = (SELECT MAX(id_transaksi) FROM transaksi)),
-        id_anggota = OLD.id_anggota,
-        saldo_lama = OLD.saldo,
-        saldo_baru = NEW.saldo,
-        action = 'UPDATE',
-        change_date = NOW();
-    END $$
-
-CREATE TRIGGER IF NOT EXISTS before_transaksi_insert
-BEFORE INSERT ON transaksi
-FOR EACH ROW
-    BEGIN
-        DECLARE saldo_change INT;
-        DECLARE bunga INT;
-        IF NEW.setoran THEN 
-            SET bunga = 0.05 * NEW.nilai_transaksi;
-            SET saldo_change = NEW.nilai_transaksi;
-        ELSE
-            SET bunga = 0;
-            SET saldo_change = -1 * NEW.nilai_transaksi;
-        END IF;
-        SET NEW.bunga = bunga;
-        UPDATE anggota
-        SET saldo = saldo + saldo_change
-        WHERE id_anggota = NEW.id_anggota;
-    END $$
-
-CREATE PROCEDURE IF NOT EXISTS history_transaksi(IN nama_anggota VARCHAR(50))
-BEGIN
-	SELECT t.tanggal_transaksi, t.setoran, t.nilai_transaksi, t.bunga
-    FROM anggota as a 
-    INNER JOIN transaksi as t
-    ON a.id_anggota = t.id_anggota
-    WHERE a.nama = nama_anggota;
-END $$
-DELIMITER ;
-
-
-
-
-INSERT INTO transaksi(id_transaksi, id_anggota, tanggal_transaksi, setoran, nilai_transaksi, bunga)
-VALUES 
-(001, 'AK001', '2011-02-10',1, 100000, default),
-(default, 'AK002','2011-02-10', 1, 200000, default),
-(default, 'AK003','2011-02-11',1,300000,default),
-(default, 'AK004','2011-02-11',0,50000,default),
-(default, 'AK005','2011-02-11',1,100000,default),
-(default, 'AK006','2011-02-12',1,200000,default),
-(default, 'AK007','2011-02-12',1,300000,default),
-(default, 'AK008','2011-02-12',1,100000,default),
-(default, 'AK009','2011-02-14',1,100000,default),
-(default, 'AK010','2011-02-14',1,300000,default),
-(default, 'AK011','2011-02-15',1,200000,default),
-(default, 'AK012','2011-02-16',0,50000,default),
-(default, 'AK013','2011-02-16',1,300000,default),
-(default, 'AK014','2011-02-17',1,200000,default),
-(default, 'AK015','2011-02-17',1,100000,default),
-(default, 'AK016','2011-02-17',1,100000,default),
-(default, 'AK017','2011-02-18',1,300000,default),
-(default, 'AK018','2011-02-18',1,100000,default),
-(default, 'AK019','2011-02-19',1,200000,default),
-(default, 'AK020','2011-02-19',0,50000,default),
-(default, 'AK011','2011-02-19',0,100000,default);
 
 SELECT * FROM transaksi;
 SELECT * FROM log_anggota;
