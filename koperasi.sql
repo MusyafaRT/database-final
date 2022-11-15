@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS transaksi(
     id_transaksi INT PRIMARY KEY AUTO_INCREMENT,
     id_anggota VARCHAR(10) NOT NULL,
     tanggal_transaksi DATETIME NOT NULL,
-    setoran BOOLEAN NOT NULL,
+    setoran BIT NOT NULL,
     nilai_transaksi INT NOT NULL,
     bunga INT DEFAULT NULL,
     FOREIGN KEY (id_anggota) REFERENCES anggota(id_anggota)
@@ -96,3 +96,26 @@ VALUES
     ('AK020', 'Hasna', 'Jl. Kertajaya 10 Bandung', '022-2530965', 1000000);
 
 
+INSERT INTO transaksi(id_transaksi, id_anggota, tanggal_transaksi, setoran, nilai_transaksi, bunga)
+VALUES 
+(001, 'AK001', '2011-02-10',true, 100000, default),
+(default, 'AK002','2011-02-10', true, 200000, default),
+(default, 'AK003','2011-02-11',true,300000,default),
+(default, 'AK004','2011-02-11',false,50000,default),
+(default, 'AK005','2011-02-11',true,100000,default),
+(default, 'AK006','2011-02-12',true,200000,default),
+(default, 'AK007','2011-02-12',true,300000,default),
+(default, 'AK008','2011-02-12',true,100000,default),
+(default, 'AK009','2011-02-14',true,100000,default),
+(default, 'AK010','2011-02-14',true,300000,default),
+(default, 'AK011','2011-02-15',true,200000,default),
+(default, 'AK012','2011-02-16',false,50000,default),
+(default, 'AK013','2011-02-16',true,300000,default),
+(default, 'AK014','2011-02-17',true,200000,default),
+(default, 'AK015','2011-02-17',true,100000,default),
+(default, 'AK016','2011-02-17',true,100000,default),
+(default, 'AK017','2011-02-18',true,300000,default),
+(default, 'AK018','2011-02-18',true,100000,default),
+(default, 'AK019','2011-02-19',true,200000,default),
+(default, 'AK020','2011-02-19',false,50000,default),
+(default, 'AK011','2011-02-19',false,100000,default);
