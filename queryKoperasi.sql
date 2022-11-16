@@ -72,7 +72,3 @@ VALUES
 SELECT * FROM anggota;
 SELECT * FROM log_anggota;
 SELECT * FROM transaksi;
-SHOW COLUMNS FROM log_anggota
-WHERE Field = 'id_transaksi';
-
-select (id_transaksi+1),id_anggota from log_anggota;
