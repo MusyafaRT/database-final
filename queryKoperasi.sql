@@ -1,12 +1,13 @@
 USE koperasi;
 
 DELIMITER $$
-CREATE TRIGGER IF NOT EXISTS after_anggota_update
+CREATE TRIGGER  after_anggota_update
 AFTER UPDATE ON anggota
 FOR EACH ROW 
     BEGIN
         INSERT INTO log_anggota
-        SET id_transaksi = (SELECT id_transaksi FROM transaksi WHERE id_transaksi = (SELECT MAX(id_transaksi) FROM transaksi)),
+        SET
+        id_transaksi = (SELECT case when ((max(id_transaksi))) is null then '1' else id_transaksi+1 end from transaksi WHERE id_transaksi= (SELECT Max(id_transaksi) from transaksi)),
         id_anggota = OLD.id_anggota,
         saldo_lama = OLD.saldo,
         saldo_baru = NEW.saldo,
@@ -14,7 +15,7 @@ FOR EACH ROW
         change_date = NOW();
     END $$
 
-CREATE TRIGGER IF NOT EXISTS before_transaksi_insert
+CREATE TRIGGER before_transaksi_insert
 BEFORE INSERT ON transaksi
 FOR EACH ROW
     BEGIN
@@ -33,7 +34,7 @@ FOR EACH ROW
         WHERE id_anggota = NEW.id_anggota;
     END $$
 
-CREATE PROCEDURE IF NOT EXISTS history_transaksi(IN nama_anggota VARCHAR(50))
+CREATE PROCEDURE history_transaksi(IN nama_anggota VARCHAR(50))
 BEGIN
 	SELECT t.tanggal_transaksi, t.setoran, t.nilai_transaksi, t.bunga
     FROM anggota as a 
@@ -71,3 +72,7 @@ VALUES
 SELECT * FROM anggota;
 SELECT * FROM log_anggota;
 SELECT * FROM transaksi;
+SHOW COLUMNS FROM log_anggota
+WHERE Field = 'id_transaksi';
+
+select (id_transaksi+1),id_anggota from log_anggota;
