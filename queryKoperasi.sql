@@ -42,6 +42,25 @@ BEGIN
     ON a.id_anggota = t.id_anggota
     WHERE a.nama = nama_anggota;
 END $$
+
+CREATE PROCEDURE show_saldo(IN nama_anggota VARCHAR(50))
+BEGIN
+	SELECT id_anggota, nama, saldo
+    FROM anggota
+    WHERE nama = nama_anggota;
+END $$	
+
+CREATE FUNCTION jumlah_transaksi(nama_anggota VARCHAR(50)) RETURNS INT
+DETERMINISTIC
+BEGIN 
+	DECLARE jml INT;
+    SET jml = (SELECT COUNT(id_transaksi) 
+			FROM transaksi as t
+            INNER JOIN anggota as a
+            ON t.id_anggota = a.id_anggota
+            WHERE a.nama = nama_anggota);
+	RETURN (jml);
+END $$
 DELIMITER ;
 
 SELECT * FROM anggota;
