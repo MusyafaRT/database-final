@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS anggota(
     id_anggota VARCHAR(10) PRIMARY KEY NOT NULL,
     nama VARCHAR(50) NOT NULL,
     alamat TEXT NOT NULL,
-    telpon VARCHAR(15) NOT NULL,
+    telepon VARCHAR(15) NOT NULL,
     saldo INT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS transaksi(
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS transaksi(
     bunga INT DEFAULT NULL,
     FOREIGN KEY (id_anggota) REFERENCES anggota(id_anggota)
 );
-INSERT INTO anggota(id_anggota, nama, alamat, telpon, saldo)
+INSERT INTO anggota(id_anggota, nama, alamat, telepon, saldo)
 VALUES 
     ('AK001', 'Cecep', 'Jl. Tubagus 01 Bandung', '022-2536789', 100000),
     ('AK002', 'Faiz', 'Jl. Bintang 31 Bandung', '022-2536749', 100000),
