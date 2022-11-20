@@ -87,6 +87,21 @@ BEGIN
 END $$
 DELIMITER ;
 
+Create Procedure minimum_maximum(IN jenis BIT )
+BEGIN 
+if jenis THEN 
+   SELECT id_anggota, nama, saldo AS saldo_maksimum FROM anggota
+	WHERE saldo = (SELECT max(saldo) FROM anggota);
+Else 
+    SELECT id_anggota, nama, saldo AS saldo_minimum FROM anggota
+	WHERE saldo = (SELECT min(saldo) FROM anggota);
+    END IF;
+    END $$
+    Delimiter ;
+
+call minimum_maximum (1)
+call minimum_maximum (0)
+
 call min_saldo();
 call max_saldo();
 call minmax_saldo();
