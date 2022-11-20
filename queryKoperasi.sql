@@ -63,6 +63,15 @@ BEGIN
 END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE PROCEDURE minmax_saldo()
+BEGIN
+	SELECT min(saldo) AS saldo_minimum, max(saldo) AS saldo_maksimum FROM anggota;
+END $$
+DELIMITER ;
+
+call minmax_saldo();
+
 SELECT * FROM anggota;
 INSERT INTO transaksi(id_anggota, tanggal_transaksi, setoran, nilai_transaksi, bunga)
 VALUES 
