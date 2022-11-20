@@ -64,12 +64,31 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE minmax_saldo()
+CREATE PROCEDURE max_saldo()
 BEGIN
-	SELECT min(saldo) AS saldo_minimum, max(saldo) AS saldo_maksimum FROM anggota;
+    SELECT id_anggota, nama, saldo AS saldo_maksimum FROM anggota
+	WHERE saldo = (SELECT max(saldo) FROM anggota);
 END $$
 DELIMITER ;
 
+DELIMITER $$
+CREATE PROCEDURE min_saldo()
+BEGIN
+    SELECT id_anggota, nama, saldo AS saldo_minimum FROM anggota
+	WHERE saldo = (SELECT min(saldo) FROM anggota);
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE minmax_saldo()
+BEGIN
+	SELECT min(saldo) AS saldo_minimum, max(saldo) AS saldo_maksimum
+    FROM Anggota;
+END $$
+DELIMITER ;
+
+call min_saldo();
+call max_saldo();
 call minmax_saldo();
 
 SELECT * FROM anggota;
