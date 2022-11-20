@@ -14,6 +14,35 @@ FOR EACH ROW
         action = 'UPDATE',
         change_date = NOW();
     END $$
+    
+ CREATE TRIGGER  after_anggota_insert
+AFTER INSERT ON anggota
+FOR EACH ROW 
+    BEGIN
+        INSERT INTO log_anggota
+        SET
+        id_transaksi = null,
+        id_anggota = NEW.id_anggota,
+        saldo_lama = 0,
+        saldo_baru = NEW.saldo,
+        action = 'INSERT',
+        change_date = NOW();
+  END $$
+  
+  CREATE TRIGGER  after_anggota_delete
+AFTER DELETE ON anggota
+FOR EACH ROW 
+    BEGIN
+        INSERT INTO log_anggota
+        SET
+        id_transaksi = null,
+        id_anggota = OLD.id_anggota,
+        saldo_lama = OLD.saldo,
+        saldo_baru = null,
+        action = 'Delete',
+        change_date = NOW();
+    END $$    
+    
 
 CREATE TRIGGER before_transaksi_insert
 BEFORE INSERT ON transaksi
@@ -33,6 +62,9 @@ FOR EACH ROW
         SET saldo = saldo + saldo_change + bunga
         WHERE id_anggota = NEW.id_anggota;
     END $$
+    
+
+
 
 CREATE PROCEDURE history_transaksi(IN nama_anggota VARCHAR(50))
 BEGIN
