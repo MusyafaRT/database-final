@@ -1,5 +1,3 @@
-
-
 USE koperasi;
 
 DELIMITER $$
@@ -30,17 +28,17 @@ FOR EACH ROW
         action = 'INSERT',
         change_date = NOW();
   END $$
-
     
 
 CREATE TRIGGER before_transaksi_insert
 BEFORE INSERT ON transaksi
 FOR EACH ROW
     BEGIN
+        
         DECLARE saldo_change INT;
         DECLARE bunga INT;
         IF NEW.setoran THEN 
-            SET bunga = 0.05 * NEW.nilai_transaksi;
+            SET bunga = bunga_update(new.nilai_transaksi)*New.nilai_transaksi;
             SET saldo_change = NEW.nilai_transaksi;
         ELSE
             SET bunga = 0;
@@ -52,8 +50,21 @@ FOR EACH ROW
         WHERE id_anggota = NEW.id_anggota;
     END $$
     
-
-
+    delimiter $$
+    create function bunga_update(p_nilai_transaksi int(10)) returns float(10,2) 
+    DETERMINISTIC
+	BEGIN 
+    declare new_bunga float(10,2);
+    if p_nilai_transaksi <= 100000 then
+    set new_bunga=0.05;
+    elseif p_nilai_transaksi>=100000 and p_nilai_transaksi <=200000 then
+    set new_bunga=0.1;
+    elseif p_nilai_transaksi >200000 then
+    set new_bunga=0.12;
+    end if;
+    return(new_bunga);
+    end $$
+    
 
 CREATE PROCEDURE history_transaksi(IN nama_anggota VARCHAR(50))
 BEGIN
@@ -82,15 +93,32 @@ BEGIN
             WHERE a.nama = nama_anggota);
 	RETURN (jml);
 END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE max_saldo()
+BEGIN
+    SELECT id_anggota, nama, saldo AS saldo_maksimum FROM anggota
+	WHERE saldo = (SELECT max(saldo) FROM anggota);
+END $$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE min_saldo()
+BEGIN
+    SELECT id_anggota, nama, saldo AS saldo_minimum FROM anggota
+	WHERE saldo = (SELECT min(saldo) FROM anggota);
+END $$
+DELIMITER ;
+
 DELIMITER $$
 CREATE PROCEDURE minmax_saldo()
-    BEGIN
-        SELECT min(saldo) AS saldo_minimum, max(saldo) AS saldo_maksimum
-        FROM anggota;
-    END $$
-    
+BEGIN
+	SELECT min(saldo) AS saldo_minimum, max(saldo) AS saldo_maksimum
+    FROM Anggota;
+END $$
 
-CREATE PROCEDURE minimum_maximum(IN jenis BIT )
+Create Procedure minimum_maximum(IN jenis BIT )
 BEGIN 
 if jenis THEN 
    SELECT id_anggota, nama, saldo AS saldo_maksimum FROM anggota
@@ -100,12 +128,13 @@ Else
 	WHERE saldo = (SELECT min(saldo) FROM anggota);
     END IF;
     END $$
-    
-DELIMITER ;
+    Delimiter ;
 
 call minimum_maximum (1);
 call minimum_maximum (0);
 
+call min_saldo();
+call max_saldo();
 call minmax_saldo();
 
 SELECT * FROM anggota;
