@@ -1,3 +1,5 @@
+
+
 USE koperasi;
 
 DELIMITER $$
@@ -29,19 +31,19 @@ FOR EACH ROW
         change_date = NOW();
   END $$
   
-  CREATE TRIGGER  after_anggota_delete
-AFTER DELETE ON anggota
-FOR EACH ROW 
-    BEGIN
-        INSERT INTO log_anggota
-        SET
-        id_transaksi = null,
-        id_anggota = OLD.id_anggota,
-        saldo_lama = OLD.saldo,
-        saldo_baru = null,
-        action = 'Delete',
-        change_date = NOW();
-    END $$    
+--   CREATE TRIGGER  after_anggota_delete
+-- AFTER DELETE ON anggota
+-- FOR EACH ROW 
+--     BEGIN
+--         INSERT INTO log_anggota
+--         SET
+--         id_transaksi = null,
+--         id_anggota = OLD.id_anggota,
+--         saldo_lama = OLD.saldo,
+--         saldo_baru = null,
+--         action = 'Delete',
+--         change_date = NOW();
+--     END $$    
     
 
 CREATE TRIGGER before_transaksi_insert
@@ -93,7 +95,7 @@ BEGIN
             WHERE a.nama = nama_anggota);
 	RETURN (jml);
 END $$
-DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE max_saldo()
@@ -101,7 +103,7 @@ BEGIN
     SELECT id_anggota, nama, saldo AS saldo_maksimum FROM anggota
 	WHERE saldo = (SELECT max(saldo) FROM anggota);
 END $$
-DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE min_saldo()
@@ -109,17 +111,17 @@ BEGIN
     SELECT id_anggota, nama, saldo AS saldo_minimum FROM anggota
 	WHERE saldo = (SELECT min(saldo) FROM anggota);
 END $$
-DELIMITER ;
+
 
 DELIMITER $$
 CREATE PROCEDURE minmax_saldo()
-BEGIN
-	SELECT min(saldo) AS saldo_minimum, max(saldo) AS saldo_maksimum
-    FROM Anggota;
-END $$
-DELIMITER ;
+    BEGIN
+        SELECT min(saldo) AS saldo_minimum, max(saldo) AS saldo_maksimum
+        FROM anggota;
+    END $$
+    
 
-Create Procedure minimum_maximum(IN jenis BIT )
+CREATE PROCEDURE minimum_maximum(IN jenis BIT )
 BEGIN 
 if jenis THEN 
    SELECT id_anggota, nama, saldo AS saldo_maksimum FROM anggota
@@ -129,10 +131,11 @@ Else
 	WHERE saldo = (SELECT min(saldo) FROM anggota);
     END IF;
     END $$
-    Delimiter ;
+    
+DELIMITER ;
 
-call minimum_maximum (1)
-call minimum_maximum (0)
+call minimum_maximum (1);
+call minimum_maximum (0);
 
 call min_saldo();
 call max_saldo();
